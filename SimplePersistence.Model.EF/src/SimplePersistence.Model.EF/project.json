@@ -1,21 +1,37 @@
 ﻿{
-  "version": "1.0.0-*",
-  "description": "SimplePersistence.Model.EF Class Library",
-  "authors": [ "joao.simoes" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "version": "3.0.0-alpha1",
+  "title": "SimplePersistence.Model.EF",
+  "description": "SimplePersistence.Model.EF extends the SimplePersistence.Model package by exposing dedicated Entity Framework extension methods and classes.",
+  "authors": [ "João Simões" ],
+  "tags": [ "database", "model", "persistence", "Entity Framework", "EF" ],
+  "projectUrl": "https://github.com/SimplePersistence/SimplePersistence.Model.EF",
+  "licenseUrl": "https://github.com/SimplePersistence/SimplePersistence.Model.EF/blob/master/LICENSE",
+  "iconUrl": "https://avatars3.githubusercontent.com/u/17026510",
+  "language": "en-US",
+  "copyright": "Copyright © 2016 SimplePersistence",
+  "releaseNotes": "",
 
   "frameworks": {
-    "net451": { },
-    "dotnet5.4": {
+    "dotnet": {
       "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Runtime": "4.0.21-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
+
+      }
+    },
+    "dnxcore5": {
+      "dependencies": {
+
+      }
+    },
+    "net40": {
+      "dependencies": {
+      }
+    },
+    "net45": {
+      "dependencies": {
       }
     }
+  },
+  "dependencies": {
+    "SimplePersistence.Model": "3.0.2"
   }
 }
