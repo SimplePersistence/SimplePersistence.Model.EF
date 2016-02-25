@@ -24,12 +24,12 @@
     },
     "net40": {
       "dependencies": {
-        "EntityFramework": "6.0.0"
+        "EntityFramework": "6.1.0"
       }
     },
     "net45": {
       "dependencies": {
-        "EntityFramework": "6.0.0"
+        "EntityFramework": "6.1.0"
       }
     }
   },
