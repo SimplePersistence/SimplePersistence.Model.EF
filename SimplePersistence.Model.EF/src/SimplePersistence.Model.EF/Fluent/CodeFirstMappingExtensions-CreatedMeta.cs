@@ -28,10 +28,7 @@ namespace SimplePersistence.Model.EF.Fluent
 #if (NET40 || NET45)
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Configuration;
-
-    /// <summary>
-    /// Extension methods for Entity Framework code first mappings
-    /// </summary>
+    
     public static partial class CodeFirstMappingExtensions
     {
         #region IHaveCreatedMeta
@@ -39,25 +36,27 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <summary>
         /// Maps the created metadata for an entity implementing the <see cref="IHaveCreatedMeta{TCreatedBy}"/>
         /// </summary>
-        /// <param name="cfg">The entity configuration</param>
-        /// <param name="maxLength">
-        /// The max length for the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property. By default <see cref="DefaultMaxLength"/> will be used.
-        /// </param>
-        /// <param name="propertyCreatedOnNeedsIndex">
-        /// Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index? By default <see cref="DefaultPropertyNeedsIndex"/> will be used.
-        /// </param>
         /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="byMaxLength">The max length for the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property.</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byNeedsIndex">Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> needs an index?</param>
         /// <returns>The entity configuration after changes</returns>
-        /// <exception cref="ArgumentNullException"/>
-        public static EntityTypeConfiguration<T> MapCreatedMeta<T>(this EntityTypeConfiguration<T> cfg, int maxLength = DefaultMaxLength, bool propertyCreatedOnNeedsIndex = DefaultPropertyNeedsIndex)
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeConfiguration<T> MapCreatedMeta<T>(
+            this EntityTypeConfiguration<T> cfg, int byMaxLength = DefaultMaxLength, bool onNeedsIndex = DefaultPropertyNeedsIndex,
+            bool byNeedsIndex = DefaultPropertyNeedsIndex)
             where T : class, IHaveCreatedMeta<string>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var propertyConfiguration = cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyCreatedOnNeedsIndex)
-                propertyConfiguration.AddIndex();
-            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(maxLength);
+            var onCfg = cfg.Property(e => e.CreatedOn).IsRequired();
+            if (onNeedsIndex)
+                onCfg.AddIndex();
+
+            var byCfg = cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(byMaxLength);
+            if (byNeedsIndex)
+                byCfg.AddIndex();
 
             return cfg;
         }
@@ -65,30 +64,27 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <summary>
         /// Maps the created metadata for an entity implementing the <see cref="IHaveCreatedMeta{TCreatedBy}"/>
         /// </summary>
-        /// <param name="cfg">The entity configuration</param>
-        /// <param name="mapping">
-        /// Optional extra mapping for the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property.
-        /// May be used to map the inverse relation.
-        /// </param>
-        /// <param name="propertyCreatedOnNeedsIndex">
-        /// Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index? By default <see cref="DefaultPropertyNeedsIndex"/> will be used.
-        /// </param>
         /// <typeparam name="T">The entity type</typeparam>
-        /// <typeparam name="TCreatedBy">The type of the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property</typeparam>
+        /// <typeparam name="TBy">The by property type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byMapping">An optional lambda for mapping the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/></param>
         /// <returns>The entity configuration after changes</returns>
-        /// <exception cref="ArgumentNullException"/>
-        public static EntityTypeConfiguration<T> MapCreatedMeta<T, TCreatedBy>(
-            this EntityTypeConfiguration<T> cfg, Action<RequiredNavigationPropertyConfiguration<T, TCreatedBy>> mapping = null, bool propertyCreatedOnNeedsIndex = DefaultPropertyNeedsIndex)
-            where T : class, IHaveCreatedMeta<TCreatedBy>
-            where TCreatedBy : class
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeConfiguration<T> MapCreatedMeta<T, TBy>(
+            this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, 
+            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            where T : class, IHaveCreatedMeta<TBy>
+            where TBy : class
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var propertyCreatedOnConfiguration = cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyCreatedOnNeedsIndex)
-                propertyCreatedOnConfiguration.AddIndex();
-            var propertyConfiguration = cfg.HasRequired(e => e.CreatedBy);
-            mapping?.Invoke(propertyConfiguration);
+            var onCfg = cfg.Property(e => e.CreatedOn).IsRequired();
+            if (onNeedsIndex)
+                onCfg.AddIndex();
+
+            var byCfg = cfg.HasRequired(e => e.CreatedBy);
+            byMapping?.Invoke(byCfg);
 
             return cfg;
         }
@@ -98,58 +94,57 @@ namespace SimplePersistence.Model.EF.Fluent
         #region IHaveLocalCreatedMeta
 
         /// <summary>
-        /// Maps the created metadata for an entity implementing the <see cref="IHaveCreatedMeta{TCreatedBy}"/>
+        /// Maps the created metadata for an entity implementing the <see cref="IHaveLocalCreatedMeta{TCreatedBy}"/>
         /// </summary>
-        /// <param name="cfg">The entity configuration</param>
-        /// <param name="maxLength">
-        /// The max length for the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property. By default <see cref="DefaultMaxLength"/> will be used.
-        /// </param>
-        /// <param name="propertyCreatedOnNeedsIndex">
-        /// Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index? By default <see cref="DefaultPropertyNeedsIndex"/> will be used.
-        /// </param>
         /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="byMaxLength">The max length for the <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedBy"/> property.</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byNeedsIndex">Does <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedBy"/> needs an index?</param>
         /// <returns>The entity configuration after changes</returns>
-        /// <exception cref="ArgumentNullException"/>
-        public static EntityTypeConfiguration<T> MapLocalCreatedMeta<T>(this EntityTypeConfiguration<T> cfg, int maxLength = DefaultMaxLength, bool propertyCreatedOnNeedsIndex = DefaultPropertyNeedsIndex)
-            where T : class, IHaveLocalCreatedMeta
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeConfiguration<T> MapLocalCreatedMeta<T>(
+            this EntityTypeConfiguration<T> cfg, int byMaxLength = DefaultMaxLength, bool onNeedsIndex = DefaultPropertyNeedsIndex,
+            bool byNeedsIndex = DefaultPropertyNeedsIndex)
+            where T : class, IHaveLocalCreatedMeta<string>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var propertyConfiguration = cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyCreatedOnNeedsIndex)
-                propertyConfiguration.AddIndex();
-            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(maxLength);
+            var onCfg = cfg.Property(e => e.CreatedOn).IsRequired();
+            if (onNeedsIndex)
+                onCfg.AddIndex();
+
+            var byCfg = cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(byMaxLength);
+            if (byNeedsIndex)
+                byCfg.AddIndex();
 
             return cfg;
         }
 
         /// <summary>
-        /// Maps the created metadata for an entity implementing the <see cref="IHaveCreatedMeta{TCreatedBy}"/>
+        /// Maps the created metadata for an entity implementing the <see cref="IHaveLocalCreatedMeta{TCreatedBy}"/>
         /// </summary>
-        /// <param name="cfg">The entity configuration</param>
-        /// <param name="mapping">
-        /// Optional extra mapping for the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property.
-        /// May be used to map the inverse relation.
-        /// </param>
-        /// <param name="propertyCreatedOnNeedsIndex">
-        /// Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index? By default <see cref="DefaultPropertyNeedsIndex"/> will be used.
-        /// </param>
         /// <typeparam name="T">The entity type</typeparam>
-        /// <typeparam name="TCreatedBy">The type of the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property</typeparam>
+        /// <typeparam name="TBy">The by property type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byMapping">An optional lambda for mapping the <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedBy"/></param>
         /// <returns>The entity configuration after changes</returns>
-        /// <exception cref="ArgumentNullException"/>
-        public static EntityTypeConfiguration<T> MapLocalCreatedMeta<T, TCreatedBy>(
-            this EntityTypeConfiguration<T> cfg, Action<RequiredNavigationPropertyConfiguration<T, TCreatedBy>> mapping = null, bool propertyCreatedOnNeedsIndex = DefaultPropertyNeedsIndex)
-            where T : class, IHaveLocalCreatedMeta<TCreatedBy>
-            where TCreatedBy : class
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeConfiguration<T> MapLocalCreatedMeta<T, TBy>(
+            this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex,
+            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            where T : class, IHaveLocalCreatedMeta<TBy>
+            where TBy : class
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var propertyCreatedOnConfiguration = cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyCreatedOnNeedsIndex)
-                propertyCreatedOnConfiguration.AddIndex();
-            var propertyConfiguration = cfg.HasRequired(e => e.CreatedBy);
-            mapping?.Invoke(propertyConfiguration);
+            var onCfg = cfg.Property(e => e.CreatedOn).IsRequired();
+            if (onNeedsIndex)
+                onCfg.AddIndex();
+
+            var byCfg = cfg.HasRequired(e => e.CreatedBy);
+            byMapping?.Invoke(byCfg);
 
             return cfg;
         }
@@ -158,94 +153,125 @@ namespace SimplePersistence.Model.EF.Fluent
     }
 
 #else
-    
     using Microsoft.Data.Entity.Metadata.Builders;
-
-    /// <summary>
-    /// Extension methods for Entity Framework code first mappings
-    /// </summary>
-    [CLSCompliant(false)]
+    
     public static partial class CodeFirstMappingExtensions
     {
-    #region IHaveCreatedMeta
+        #region IHaveCreatedMeta
 
+        /// <summary>
+        /// Maps the created metadata for an entity implementing the <see cref="IHaveCreatedMeta{TCreatedBy}"/>
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="byMaxLength">The max length for the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> property.</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byNeedsIndex">Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/> needs an index?</param>
+        /// <returns>The entity configuration after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeBuilder<T> MapCreatedMeta<T>(
-            this EntityTypeBuilder<T> cfg, int maxLength = DefaultMaxLength, bool propertyOnNeedsIndex = DefaultPropertyNeedsIndex, 
-            bool propertyByNeedsIndex = DefaultPropertyNeedsIndex) 
-            where T : class, IHaveCreatedMeta
+            this EntityTypeBuilder<T> cfg, int byMaxLength = DefaultMaxLength, bool onNeedsIndex = DefaultPropertyNeedsIndex, 
+            bool byNeedsIndex = DefaultPropertyNeedsIndex) 
+            where T : class, IHaveCreatedMeta<string>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
             cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyOnNeedsIndex)
+            if (onNeedsIndex)
                 cfg.HasIndex(e => e.CreatedOn);
 
-            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(maxLength);
-            if (propertyByNeedsIndex)
+            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(byMaxLength);
+            if (byNeedsIndex)
                 cfg.HasIndex(e => e.CreatedBy);
 
             return cfg;
         }
 
-        public static EntityTypeBuilder<T> MapCreatedMeta<T, TCreatedBy>(
-            this EntityTypeBuilder<T> cfg, int maxLength = DefaultMaxLength, bool propertyOnNeedsIndex = DefaultPropertyNeedsIndex,
-            bool propertyByNeedsIndex = DefaultPropertyNeedsIndex)
-            where T : class, IHaveCreatedMeta<TCreatedBy>
+        /// <summary>
+        /// Maps the created metadata for an entity implementing the <see cref="IHaveCreatedMeta{TCreatedBy}"/>
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <typeparam name="TBy">The by property type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byMapping">An optional lambda for mapping the <see cref="IHaveCreatedMeta{TCreatedBy}.CreatedBy"/></param>
+        /// <returns>The entity configuration after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeBuilder<T> MapCreatedMeta<T, TBy>(
+            this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action < PropertyBuilder<TBy>> byMapping = null)
+            where T : class, IHaveCreatedMeta<TBy>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
             cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyOnNeedsIndex)
+            if (onNeedsIndex)
                 cfg.HasIndex(e => e.CreatedOn);
 
-            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(maxLength);
-            if (propertyByNeedsIndex)
-                cfg.HasIndex(e => e.CreatedBy);
+            var byCfg = cfg.Property(e => e.CreatedBy).IsRequired();
+            byMapping?.Invoke(byCfg);
 
             return cfg;
         }
 
-    #endregion
+        #endregion
 
-    #region IHaveLocalCreatedMeta
+        #region IHaveLocalCreatedMeta
 
+        /// <summary>
+        /// Maps the created metadata for an entity implementing the <see cref="IHaveLocalCreatedMeta{TCreatedBy}"/>
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="byMaxLength">The max length for the <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedBy"/> property.</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byNeedsIndex">Does <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedBy"/> needs an index?</param>
+        /// <returns>The entity configuration after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeBuilder<T> MapLocalCreatedMeta<T>(
-            this EntityTypeBuilder<T> cfg, int maxLength = DefaultMaxLength, bool propertyOnNeedsIndex = DefaultPropertyNeedsIndex,
-            bool propertyByNeedsIndex = DefaultPropertyNeedsIndex)
-            where T : class, IHaveLocalCreatedMeta
+            this EntityTypeBuilder<T> cfg, int byMaxLength = DefaultMaxLength, bool onNeedsIndex = DefaultPropertyNeedsIndex,
+            bool byNeedsIndex = DefaultPropertyNeedsIndex)
+            where T : class, IHaveLocalCreatedMeta<string>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
             cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyOnNeedsIndex)
+            if (onNeedsIndex)
                 cfg.HasIndex(e => e.CreatedOn);
 
-            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(maxLength);
-            if (propertyByNeedsIndex)
+            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(byMaxLength);
+            if (byNeedsIndex)
                 cfg.HasIndex(e => e.CreatedBy);
 
             return cfg;
         }
 
-        public static EntityTypeBuilder<T> MapLocalCreatedMeta<T, TCreatedBy>(
-            this EntityTypeBuilder<T> cfg, int maxLength = DefaultMaxLength, bool propertyOnNeedsIndex = DefaultPropertyNeedsIndex,
-            bool propertyByNeedsIndex = DefaultPropertyNeedsIndex)
-            where T : class, IHaveLocalCreatedMeta<TCreatedBy>
+        /// <summary>
+        /// Maps the created metadata for an entity implementing the <see cref="IHaveLocalCreatedMeta{TCreatedBy}"/>
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <typeparam name="TBy">The by property type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="onNeedsIndex">Does <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedOn"/> needs an index?</param>
+        /// <param name="byMapping">An optional lambda for mapping the <see cref="IHaveLocalCreatedMeta{TCreatedBy}.CreatedBy"/></param>
+        /// <returns>The entity configuration after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeBuilder<T> MapLocalCreatedMeta<T, TBy>(
+            this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action<PropertyBuilder<TBy>> byMapping = null)
+            where T : class, IHaveLocalCreatedMeta<TBy>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
             cfg.Property(e => e.CreatedOn).IsRequired();
-            if (propertyOnNeedsIndex)
+            if (onNeedsIndex)
                 cfg.HasIndex(e => e.CreatedOn);
 
-            cfg.Property(e => e.CreatedBy).IsRequired().HasMaxLength(maxLength);
-            if (propertyByNeedsIndex)
-                cfg.HasIndex(e => e.CreatedBy);
+            var byCfg = cfg.Property(e => e.CreatedBy).IsRequired();
+            byMapping?.Invoke(byCfg);
 
             return cfg;
         }
 
-    #endregion
+        #endregion
     }
 #endif
 }

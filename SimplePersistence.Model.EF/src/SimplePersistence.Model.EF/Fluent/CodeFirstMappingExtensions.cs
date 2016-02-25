@@ -23,9 +23,14 @@
 #endregion
 namespace SimplePersistence.Model.EF.Fluent
 {
+    using System;
+
     /// <summary>
     /// Extension methods for Entity Framework code first mappings
     /// </summary>
+#if !(NET40 || NET45)
+    [CLSCompliant(false)]
+#endif
     public static partial class CodeFirstMappingExtensions
     {
         /// <summary>

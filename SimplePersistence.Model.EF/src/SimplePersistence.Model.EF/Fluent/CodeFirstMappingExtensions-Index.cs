@@ -28,10 +28,7 @@ namespace SimplePersistence.Model.EF.Fluent
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Infrastructure.Annotations;
     using System.Data.Entity.ModelConfiguration.Configuration;
-
-    /// <summary>
-    /// Extension methods for Entity Framework code first mappings
-    /// </summary>
+    
     public static partial class CodeFirstMappingExtensions
     {
         /// <summary>
