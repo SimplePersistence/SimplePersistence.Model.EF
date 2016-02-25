@@ -31,7 +31,7 @@ namespace SimplePersistence.Model.EF.Fluent
     
     public static partial class CodeFirstMappingExtensions
     {
-    #region IHaveUpdatedMeta
+        #region IHaveUpdatedMeta
 
         /// <summary>
         /// Maps the updated metadata for an entity implementing the <see cref="IHaveUpdatedMeta{TUpdatedBy}"/>
@@ -89,9 +89,9 @@ namespace SimplePersistence.Model.EF.Fluent
             return cfg;
         }
 
-    #endregion
+        #endregion
 
-    #region IHaveLocalUpdatedMeta
+        #region IHaveLocalUpdatedMeta
 
         /// <summary>
         /// Maps the updated metadata for an entity implementing the <see cref="IHaveLocalUpdatedMeta{TUpdatedBy}"/>
@@ -149,7 +149,7 @@ namespace SimplePersistence.Model.EF.Fluent
             return cfg;
         }
 
-    #endregion
+        #endregion
     }
 
 #else
