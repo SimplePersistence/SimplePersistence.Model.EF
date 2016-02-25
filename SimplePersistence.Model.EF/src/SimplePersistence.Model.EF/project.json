@@ -9,7 +9,7 @@
   "iconUrl": "https://avatars3.githubusercontent.com/u/17026510",
   "language": "en-US",
   "copyright": "Copyright © 2016 SimplePersistence",
-  "releaseNotes": "",
+  "releaseNotes": "Added support for .NET 4+ frameworks",
 
   "frameworks": {
     "dotnet54": {
