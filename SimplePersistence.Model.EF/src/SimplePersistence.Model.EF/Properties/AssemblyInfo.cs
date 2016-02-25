@@ -1,23 +1,20 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
 [assembly: AssemblyTitle("SimplePersistence.Model.EF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("SimplePersistence.Model.EF extends the SimplePersistence.Model package by exposing dedicated Entity Framework extension methods and classes.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SimplePersistence.Model.EF")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCompany("Net.JoaoSimoes")]
+[assembly: AssemblyProduct("SimplePersistence")]
+[assembly: AssemblyCopyright("Copyright © 2016 SimplePersistence")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// Setting ComVisible to false makes the types in this assembly not visible
-// to COM components.  If you need to access a type in this assembly from
-// COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
+[assembly: Guid("0b5c7058-77a8-4efb-acd2-6eb5162626cb")]
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("cbe56c9e-4d16-4110-a2dd-0c83a8a2ecb1")]
+[assembly: CLSCompliant(true)]
+
+[assembly: AssemblyVersion("3.0.0")]
+[assembly: AssemblyInformationalVersion("3.0.0-alpha1")]
