@@ -73,9 +73,9 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeConfiguration<T> MapCreatedMeta<T, TBy>(
             this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, 
-            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            Action<PrimitivePropertyConfiguration> byMapping = null)
             where T : class, IHaveCreatedMeta<TBy>
-            where TBy : class
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
@@ -83,7 +83,7 @@ namespace SimplePersistence.Model.EF.Fluent
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.HasRequired(e => e.CreatedBy);
+            var byCfg = cfg.Property(e => e.CreatedBy).IsRequired();
             byMapping?.Invoke(byCfg);
 
             return cfg;
@@ -133,9 +133,9 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeConfiguration<T> MapLocalCreatedMeta<T, TBy>(
             this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex,
-            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            Action<PrimitivePropertyConfiguration> byMapping = null)
             where T : class, IHaveLocalCreatedMeta<TBy>
-            where TBy : class
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
@@ -143,7 +143,7 @@ namespace SimplePersistence.Model.EF.Fluent
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.HasRequired(e => e.CreatedBy);
+            var byCfg = cfg.Property(e => e.CreatedBy).IsRequired();
             byMapping?.Invoke(byCfg);
 
             return cfg;
@@ -200,6 +200,7 @@ namespace SimplePersistence.Model.EF.Fluent
         public static EntityTypeBuilder<T> MapCreatedMeta<T, TBy>(
             this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action < PropertyBuilder<TBy>> byMapping = null)
             where T : class, IHaveCreatedMeta<TBy>
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
@@ -258,6 +259,7 @@ namespace SimplePersistence.Model.EF.Fluent
         public static EntityTypeBuilder<T> MapLocalCreatedMeta<T, TBy>(
             this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action<PropertyBuilder<TBy>> byMapping = null)
             where T : class, IHaveLocalCreatedMeta<TBy>
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 

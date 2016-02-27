@@ -73,9 +73,9 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeConfiguration<T> MapUpdatedMeta<T, TBy>(
             this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, 
-            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            Action<PrimitivePropertyConfiguration> byMapping = null)
             where T : class, IHaveUpdatedMeta<TBy>
-            where TBy : class
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
@@ -83,7 +83,7 @@ namespace SimplePersistence.Model.EF.Fluent
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.HasRequired(e => e.UpdatedBy);
+            var byCfg = cfg.Property(e => e.UpdatedBy).IsOptional();
             byMapping?.Invoke(byCfg);
 
             return cfg;
@@ -133,9 +133,9 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeConfiguration<T> MapLocalUpdatedMeta<T, TBy>(
             this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex,
-            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            Action<PrimitivePropertyConfiguration> byMapping = null)
             where T : class, IHaveLocalUpdatedMeta<TBy>
-            where TBy : class
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
@@ -143,7 +143,7 @@ namespace SimplePersistence.Model.EF.Fluent
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.HasRequired(e => e.UpdatedBy);
+            var byCfg = cfg.Property(e => e.UpdatedBy).IsOptional();
             byMapping?.Invoke(byCfg);
 
             return cfg;
@@ -198,8 +198,9 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <returns>The entity configuration after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeBuilder<T> MapUpdatedMeta<T, TBy>(
-            this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action < PropertyBuilder<TBy>> byMapping = null)
+            this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action<PropertyBuilder<TBy>> byMapping = null)
             where T : class, IHaveUpdatedMeta<TBy>
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
@@ -258,6 +259,7 @@ namespace SimplePersistence.Model.EF.Fluent
         public static EntityTypeBuilder<T> MapLocalUpdatedMeta<T, TBy>(
             this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action<PropertyBuilder<TBy>> byMapping = null)
             where T : class, IHaveLocalUpdatedMeta<TBy>
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 

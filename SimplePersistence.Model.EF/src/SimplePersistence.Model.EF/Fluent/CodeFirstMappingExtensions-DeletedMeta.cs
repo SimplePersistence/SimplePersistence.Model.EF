@@ -50,11 +50,11 @@ namespace SimplePersistence.Model.EF.Fluent
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var onCfg = cfg.Property(e => e.DeletedOn).IsRequired();
+            var onCfg = cfg.Property(e => e.DeletedOn).IsOptional();
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.Property(e => e.DeletedBy).IsRequired().HasMaxLength(byMaxLength);
+            var byCfg = cfg.Property(e => e.DeletedBy).IsOptional().HasMaxLength(byMaxLength);
             if (byNeedsIndex)
                 byCfg.AddIndex();
 
@@ -73,17 +73,17 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeConfiguration<T> MapDeletedMeta<T, TBy>(
             this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, 
-            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            Action<PrimitivePropertyConfiguration> byMapping = null)
             where T : class, IHaveDeletedMeta<TBy>
-            where TBy : class
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var onCfg = cfg.Property(e => e.DeletedOn).IsRequired();
+            var onCfg = cfg.Property(e => e.DeletedOn).IsOptional();
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.HasRequired(e => e.DeletedBy);
+            var byCfg = cfg.Property(e => e.DeletedBy).IsOptional();
             byMapping?.Invoke(byCfg);
 
             return cfg;
@@ -110,11 +110,11 @@ namespace SimplePersistence.Model.EF.Fluent
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var onCfg = cfg.Property(e => e.DeletedOn).IsRequired();
+            var onCfg = cfg.Property(e => e.DeletedOn).IsOptional();
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.Property(e => e.DeletedBy).IsRequired().HasMaxLength(byMaxLength);
+            var byCfg = cfg.Property(e => e.DeletedBy).IsOptional().HasMaxLength(byMaxLength);
             if (byNeedsIndex)
                 byCfg.AddIndex();
 
@@ -133,17 +133,17 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeConfiguration<T> MapLocalDeletedMeta<T, TBy>(
             this EntityTypeConfiguration<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, 
-            Action<RequiredNavigationPropertyConfiguration<T, TBy>> byMapping = null)
+            Action<PrimitivePropertyConfiguration> byMapping = null)
             where T : class, IHaveLocalDeletedMeta<TBy>
-            where TBy : class
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            var onCfg = cfg.Property(e => e.DeletedOn).IsRequired();
+            var onCfg = cfg.Property(e => e.DeletedOn).IsOptional();
             if (onNeedsIndex)
                 onCfg.AddIndex();
 
-            var byCfg = cfg.HasRequired(e => e.DeletedBy);
+            var byCfg = cfg.Property(e => e.DeletedBy).IsOptional();
             byMapping?.Invoke(byCfg);
 
             return cfg;
@@ -176,11 +176,11 @@ namespace SimplePersistence.Model.EF.Fluent
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            cfg.Property(e => e.DeletedOn).IsRequired();
+            cfg.Property(e => e.DeletedOn).IsRequired(false);
             if (onNeedsIndex)
                 cfg.HasIndex(e => e.DeletedOn);
 
-            cfg.Property(e => e.DeletedBy).IsRequired().HasMaxLength(byMaxLength);
+            cfg.Property(e => e.DeletedBy).IsRequired(false).HasMaxLength(byMaxLength);
             if (byNeedsIndex)
                 cfg.HasIndex(e => e.DeletedBy);
 
@@ -198,16 +198,17 @@ namespace SimplePersistence.Model.EF.Fluent
         /// <returns>The entity configuration after changes</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static EntityTypeBuilder<T> MapDeletedMeta<T, TBy>(
-            this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action < PropertyBuilder<TBy>> byMapping = null)
+            this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action<PropertyBuilder<TBy>> byMapping = null)
             where T : class, IHaveDeletedMeta<TBy>
+            where TBy : struct 
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            cfg.Property(e => e.DeletedOn).IsRequired();
+            cfg.Property(e => e.DeletedOn).IsRequired(false);
             if (onNeedsIndex)
                 cfg.HasIndex(e => e.DeletedOn);
 
-            var byCfg = cfg.Property(e => e.DeletedBy).IsRequired();
+            var byCfg = cfg.Property(e => e.DeletedBy).IsRequired(false);
             byMapping?.Invoke(byCfg);
 
             return cfg;
@@ -234,11 +235,11 @@ namespace SimplePersistence.Model.EF.Fluent
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            cfg.Property(e => e.DeletedOn).IsRequired();
+            cfg.Property(e => e.DeletedOn).IsRequired(false);
             if (onNeedsIndex)
                 cfg.HasIndex(e => e.DeletedOn);
 
-            cfg.Property(e => e.DeletedBy).IsRequired().HasMaxLength(byMaxLength);
+            cfg.Property(e => e.DeletedBy).IsRequired(false).HasMaxLength(byMaxLength);
             if (byNeedsIndex)
                 cfg.HasIndex(e => e.DeletedBy);
 
@@ -258,14 +259,15 @@ namespace SimplePersistence.Model.EF.Fluent
         public static EntityTypeBuilder<T> MapLocalDeletedMeta<T, TBy>(
             this EntityTypeBuilder<T> cfg, bool onNeedsIndex = DefaultPropertyNeedsIndex, Action<PropertyBuilder<TBy>> byMapping = null)
             where T : class, IHaveLocalDeletedMeta<TBy>
+            where TBy : struct
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            cfg.Property(e => e.DeletedOn).IsRequired();
+            cfg.Property(e => e.DeletedOn).IsRequired(false);
             if (onNeedsIndex)
                 cfg.HasIndex(e => e.DeletedOn);
 
-            var byCfg = cfg.Property(e => e.DeletedBy).IsRequired();
+            var byCfg = cfg.Property(e => e.DeletedBy).IsRequired(false);
             byMapping?.Invoke(byCfg);
 
             return cfg;
