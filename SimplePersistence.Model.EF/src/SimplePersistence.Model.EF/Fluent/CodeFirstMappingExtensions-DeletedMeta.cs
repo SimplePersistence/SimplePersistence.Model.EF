@@ -150,6 +150,27 @@ namespace SimplePersistence.Model.EF.Fluent
         }
 
         #endregion
+        
+        /// <summary>
+        /// Maps the deleted metadata for an entity implementing the <see cref="IHaveSoftDelete"/>
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="needsIndex">Does <see cref="IHaveSoftDelete.Deleted"/> needs an index?</param>
+        /// <returns>The entity configuration after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeConfiguration<T> MapSoftDeleteMeta<T>(
+            this EntityTypeConfiguration<T> cfg, bool needsIndex = DefaultPropertyNeedsIndex)
+            where T : class, IHaveSoftDelete
+        {
+            if (cfg == null) throw new ArgumentNullException(nameof(cfg));
+
+            var deletedCfg = cfg.Property(e => e.Deleted).IsRequired();
+            if (needsIndex)
+                deletedCfg.AddIndex();
+
+            return cfg;
+        }
     }
 
 #else
@@ -274,6 +295,27 @@ namespace SimplePersistence.Model.EF.Fluent
         }
 
         #endregion
+
+        /// <summary>
+        /// Maps the deleted metadata for an entity implementing the <see cref="IHaveSoftDelete"/>
+        /// </summary>
+        /// <typeparam name="T">The entity type</typeparam>
+        /// <param name="cfg">The entity configuration</param>
+        /// <param name="needsIndex">Does <see cref="IHaveSoftDelete.Deleted"/> needs an index?</param>
+        /// <returns>The entity configuration after changes</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static EntityTypeBuilder<T> MapSoftDeleteMeta<T>(
+            this EntityTypeBuilder<T> cfg, bool needsIndex = DefaultPropertyNeedsIndex) 
+            where T : class, IHaveSoftDelete
+        {
+            if (cfg == null) throw new ArgumentNullException(nameof(cfg));
+
+            cfg.Property(e => e.Deleted).IsRequired();
+            if (needsIndex)
+                cfg.HasIndex(e => e.Deleted);
+
+            return cfg;
+        }
     }
 #endif
 }
