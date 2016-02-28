@@ -24,9 +24,9 @@
 namespace SimplePersistence.Model.EF.Fluent
 {
     using System;
-
 #if (NET40 || NET45)
     using System.Data.Entity.ModelConfiguration;
+    using System.Data.Entity.ModelConfiguration.Configuration;
 
     public static partial class CodeFirstMappingExtensions
     {
@@ -35,14 +35,17 @@ namespace SimplePersistence.Model.EF.Fluent
         /// </summary>
         /// <typeparam name="T">The entity type</typeparam>
         /// <param name="cfg">The entity configuration</param>
+        /// <param name="mapping">An optional lambda for mapping the <see cref="IHaveVersion{TVersion}.Version"/> property</param>
         /// <returns>The entity configuration after changes</returns>
         /// <exception cref="ArgumentNullException"/>
-        public static EntityTypeConfiguration<T> MapByteArrayVersion<T>(this EntityTypeConfiguration<T> cfg)
+        public static EntityTypeConfiguration<T> MapByteArrayVersion<T>(
+            this EntityTypeConfiguration<T> cfg, Action<BinaryPropertyConfiguration> mapping = null)
             where T : class, IHaveVersion<byte[]>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            cfg.Property(e => e.Version).IsRequired().IsConcurrencyToken();
+            var versionCfg = cfg.Property(e => e.Version).IsRequired().IsRowVersion();
+            mapping?.Invoke(versionCfg);
 
             return cfg;
         }
@@ -58,14 +61,17 @@ namespace SimplePersistence.Model.EF.Fluent
         /// </summary>
         /// <typeparam name="T">The entity type</typeparam>
         /// <param name="cfg">The entity configuration</param>
+        /// <param name="mapping">An optional lambda for mapping the <see cref="IHaveVersion{TVersion}.Version"/> property</param>
         /// <returns>The entity configuration after changes</returns>
         /// <exception cref="ArgumentNullException"/>
-        public static EntityTypeBuilder<T> MapByteArrayVersion<T>(this EntityTypeBuilder<T> cfg) 
+        public static EntityTypeBuilder<T> MapByteArrayVersion<T>(
+            this EntityTypeBuilder<T> cfg, Action<PropertyBuilder<byte[]>> mapping = null) 
             where T : class, IHaveVersion<byte[]>
         {
             if (cfg == null) throw new ArgumentNullException(nameof(cfg));
 
-            cfg.Property(e => e.Version).ValueGeneratedOnAddOrUpdate().IsConcurrencyToken();
+            var versionCfg = cfg.Property(e => e.Version).ValueGeneratedOnAddOrUpdate().IsConcurrencyToken();
+            mapping?.Invoke(versionCfg);
 
             return cfg;
         }
