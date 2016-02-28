@@ -1,5 +1,5 @@
 ﻿{
-  "version": "3.0.0-alpha2",
+  "version": "3.0.0-rc1",
   "title": "SimplePersistence.Model.EF",
   "description": "SimplePersistence.Model.EF extends the SimplePersistence.Model package by exposing dedicated Entity Framework extension methods and classes.",
   "authors": [ "João Simões" ],
@@ -9,7 +9,7 @@
   "iconUrl": "https://avatars3.githubusercontent.com/u/17026510",
   "language": "en-US",
   "copyright": "Copyright © 2016 SimplePersistence",
-  "releaseNotes": "Removed extension methods for navigation properties\nFixed required mapping for deleted meta properties",
+  "releaseNotes": "Fixed concurrency mapping issues\nAdded extensions for IHaveSoftDelete",
 
   "frameworks": {
     "dotnet54": {
