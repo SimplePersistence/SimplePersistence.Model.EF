@@ -1,5 +1,5 @@
 # SimplePersistence.Model.EF
-Model specific implementations and helpers for the Entity Framework
+Model specific implementations and helpers for the Entity Framework 6
 
 ## Installation
 This library can be installed via NuGet package. Just run the following command:
