@@ -20,7 +20,7 @@
     }
   },
   "dependencies": {
-    "SimplePersistence.Model": "3.0.2",
-    "EntityFramework": "6.1.0"
+    "EntityFramework": "6.1.0",
+    "SimplePersistence.Model": "3.0.2"
   }
 }
