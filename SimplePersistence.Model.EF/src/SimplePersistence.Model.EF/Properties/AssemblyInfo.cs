@@ -27,7 +27,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("SimplePersistence.Model.EF")]
-[assembly: AssemblyDescription("SimplePersistence.Model.EF extends the SimplePersistence.Model package by exposing dedicated Entity Framework extension methods and classes.")]
+[assembly: AssemblyDescription("SimplePersistence.Model.EF extends the SimplePersistence.Model package by exposing dedicated Entity Framework 6 extension methods and classes.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Net.JoaoSimoes")]
 [assembly: AssemblyProduct("SimplePersistence")]
@@ -40,5 +40,5 @@ using System.Runtime.InteropServices;
 
 [assembly: CLSCompliant(true)]
 
-[assembly: AssemblyVersion("3.0.0")]
-[assembly: AssemblyInformationalVersion("3.0.0")]
+[assembly: AssemblyVersion("3.0.1")]
+[assembly: AssemblyInformationalVersion("3.0.1")]
