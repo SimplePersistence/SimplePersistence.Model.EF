@@ -23,7 +23,6 @@
 #endregion
 namespace SimplePersistence.Model.EF.Fluent
 {
-#if (NET40 || NET45)
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Infrastructure.Annotations;
@@ -71,5 +70,4 @@ namespace SimplePersistence.Model.EF.Fluent
             return cfg.HasColumnAnnotation(IndexAnnotation.AnnotationName, new IndexAnnotation(ia));
         }
     }
-#endif
 }

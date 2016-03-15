@@ -24,7 +24,6 @@
 namespace SimplePersistence.Model.EF.Fluent
 {
     using System;
-#if (NET40 || NET45)
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Configuration;
 
@@ -50,31 +49,4 @@ namespace SimplePersistence.Model.EF.Fluent
             return cfg;
         }
     }
-
-#else
-    using Microsoft.Data.Entity.Metadata.Builders;
-    
-    public static partial class CodeFirstMappingExtensions
-    {
-        /// <summary>
-        /// Maps the property <see cref="IHaveVersion{TVersion}.Version"/> as a concurrency token
-        /// </summary>
-        /// <typeparam name="T">The entity type</typeparam>
-        /// <param name="cfg">The entity configuration</param>
-        /// <param name="mapping">An optional lambda for mapping the <see cref="IHaveVersion{TVersion}.Version"/> property</param>
-        /// <returns>The entity configuration after changes</returns>
-        /// <exception cref="ArgumentNullException"/>
-        public static EntityTypeBuilder<T> MapByteArrayVersion<T>(
-            this EntityTypeBuilder<T> cfg, Action<PropertyBuilder<byte[]>> mapping = null) 
-            where T : class, IHaveVersion<byte[]>
-        {
-            if (cfg == null) throw new ArgumentNullException(nameof(cfg));
-
-            var versionCfg = cfg.Property(e => e.Version).ValueGeneratedOnAddOrUpdate().IsConcurrencyToken();
-            mapping?.Invoke(versionCfg);
-
-            return cfg;
-        }
-    }
-#endif
 }

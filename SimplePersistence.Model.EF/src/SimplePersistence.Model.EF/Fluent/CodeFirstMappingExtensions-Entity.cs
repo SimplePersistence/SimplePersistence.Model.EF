@@ -23,7 +23,6 @@
 #endregion
 namespace SimplePersistence.Model.EF.Fluent
 {
-#if (NET40 || NET45)
     using System;
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration;
@@ -80,5 +79,4 @@ namespace SimplePersistence.Model.EF.Fluent
             return entityTypeConfiguration;
         }
     }
-#endif
 }
