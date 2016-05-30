@@ -1,23 +1,20 @@
 ﻿{
   "version": "3.0.1",
   "title": "SimplePersistence.Model.EF",
+  "summary": "Exposes dedicated Entity Framework 6 extension methods and classes.",
   "description": "SimplePersistence.Model.EF extends the SimplePersistence.Model package by exposing dedicated Entity Framework 6 extension methods and classes.",
   "authors": [ "João Simões" ],
   "tags": [ "database", "model", "persistence", "Entity Framework 6", "EF6" ],
   "projectUrl": "https://github.com/SimplePersistence/SimplePersistence.Model.EF",
-  "licenseUrl": "https://github.com/SimplePersistence/SimplePersistence.Model.EF/blob/master/LICENSE",
+  "licenseUrl": "https://raw.githubusercontent.com/SimplePersistence/SimplePersistence.Model.EF/master/LICENSE",
   "iconUrl": "https://avatars3.githubusercontent.com/u/17026510",
   "language": "en-US",
   "copyright": "Copyright © 2016 SimplePersistence",
   "releaseNotes": "Removed compilation for recent frameworks, focusing only on EF6",
 
   "frameworks": {
-    "net40": {
-
-    },
-    "net45": {
-
-    }
+    "net40": { },
+    "net45": { }
   },
   "dependencies": {
     "EntityFramework": "6.1.0",
