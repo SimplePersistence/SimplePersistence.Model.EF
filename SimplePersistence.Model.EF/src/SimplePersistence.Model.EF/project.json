@@ -10,7 +10,10 @@
   "iconUrl": "https://avatars3.githubusercontent.com/u/17026510",
   "language": "en-US",
   "copyright": "Copyright © 2016 SimplePersistence",
-  "releaseNotes": "Removed compilation for recent frameworks, focusing only on EF6",
+  "releaseNotes": "Library is now strong signed",
+  "compilationOptions": {
+    "keyFile": "SimplePersistence.snk"
+  },
 
   "frameworks": {
     "net40": { },
